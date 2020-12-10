@@ -6,7 +6,7 @@
 /*   By: cmarien <cmarien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 15:43:07 by cmarien           #+#    #+#             */
-/*   Updated: 2020/12/10 17:18:19 by cmarien          ###   ########.fr       */
+/*   Updated: 2020/12/10 19:07:52 by cmarien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ char	*str_edit(char *str)
 
 	j = 0;
 	i = 0;
-	while (str[i] != '\n')
+	while (str[i] && str[i] != '\n')
 		i++;
 	while (str[i++])
 		str[j++] = str[i];
@@ -109,22 +109,21 @@ int	get_next_line(int fd, char **line)
 {
 	static t_list	lst;
 
-	if (fd < 0 || line == NULL)
+	if (fd < 0 || line == NULL || !fd)
 		return (-1);
 	if (!(lst.str))
+	{
 		if (!(lst.str = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
 			return (-1);
+		lst.r = 0;
+	}
 	if (lst.r == 0)
-	{
 		lst = read_line(fd, lst);
-		if (lst.end == -1)
-			return (0);
-		*line = s_dup(lst.str);
-	}
-	if (lst.r-- > 0)
-	{
-		*line = s_dup(lst.str);
-		lst.str = str_edit(lst.str);
-	}
+	*line = s_dup(lst.str);
+	lst.str = str_edit(lst.str);
+	if (lst.r > 0)
+		lst.r--;
+	if (lst.end == -1)
+		return (0);
 	return (1);
 }

@@ -1,6 +1,3 @@
-bonjour je suis une ligne
-moi aussi
-et je suis la derniere
-ou presque
-bisous
-a la prochaine
+i'm a line
+me too
+and i'm the last line
