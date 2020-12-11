@@ -6,30 +6,17 @@
 /*   By: cmarien <cmarien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 15:43:07 by cmarien           #+#    #+#             */
-/*   Updated: 2020/12/11 16:07:00 by cmarien          ###   ########.fr       */
+/*   Updated: 2020/12/11 16:55:54 by cmarien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int		ch_n(char *str)
-{
-	int i;
-	int j;
-
-	i = -1;
-	j = 0;
-	while (str[++i])
-		if (str[i] == '\n')
-			j++;
-	return (j);
-}
-
 char	*ft_join(char *s1, char *s2)
 {
-	char *str;
-	int i;
-	int j;
+	char	*str;
+	int		i;
+	int		j;
 
 	i = 0;
 	j = 0;
@@ -75,9 +62,9 @@ char	*ft_strdup(const char *s1)
 
 t_list	read_line(int fd, t_list lst)
 {
-	int ret;
-	char buff[BUFFER_SIZE + 1];
-	char *tmp;
+	int		ret;
+	char	buff[BUFFER_SIZE + 1];
+	char	*tmp;
 
 	lst.end = 0;
 	ret = 0;
@@ -101,8 +88,8 @@ t_list	read_line(int fd, t_list lst)
 
 char	*s_dup(char *str)
 {
-	int i;
-	char *line;
+	int		i;
+	char	*line;
 
 	i = 0;
 	while (str[i] && str[i] != '\n')
@@ -119,22 +106,7 @@ char	*s_dup(char *str)
 	return (line);
 }
 
-char	*str_edit(char *str)
-{
-	int i;
-	int j;
-
-	j = 0;
-	i = 0;
-	while (str[i] && str[i] != '\n')
-		i++;
-	while (str[i++])
-		str[j++] = str[i];
-	str[j] = '\0';
-	return (str);
-}
-
-int	get_next_line(int fd, char **line)
+int		get_next_line(int fd, char **line)
 {
 	static t_list	lst;
 
@@ -148,6 +120,8 @@ int	get_next_line(int fd, char **line)
 	}
 	if (lst.r == 0)
 		lst = read_line(fd, lst);
+	if (lst.end < 0)
+		return (-1);
 	*line = s_dup(lst.str);
 	lst.str = str_edit(lst.str);
 	if (lst.r > 0)
