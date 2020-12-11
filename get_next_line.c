@@ -6,7 +6,7 @@
 /*   By: cmarien <cmarien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 15:43:07 by cmarien           #+#    #+#             */
-/*   Updated: 2020/12/10 19:07:52 by cmarien          ###   ########.fr       */
+/*   Updated: 2020/12/11 16:07:00 by cmarien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,22 +51,51 @@ char	*ft_join(char *s1, char *s2)
 	return (str);
 }
 
+char	*ft_strdup(const char *s1)
+{
+	int		i;
+	int		size;
+	char	*str;
+
+	i = 0;
+	size = 0;
+	while (s1[size])
+		size += 1;
+	str = (char*)malloc(sizeof(*str) * size + 1);
+	if (str == NULL)
+		return (NULL);
+	while (i < size)
+	{
+		str[i] = s1[i];
+		i++;
+	}
+	str[size] = '\0';
+	return (str);
+}
+
 t_list	read_line(int fd, t_list lst)
 {
 	int ret;
 	char buff[BUFFER_SIZE + 1];
+	char *tmp;
 
 	lst.end = 0;
 	ret = 0;
 	while ((ret = read(fd, buff, BUFFER_SIZE)) > 0)
 	{
-		buff[BUFFER_SIZE] = '\0';
-		lst.str = ft_join(lst.str, buff);
-		if ((lst.r = ch_n(lst.str)) > 0 || ret < BUFFER_SIZE)
+		buff[ret] = '\0';
+		if (lst.str == NULL)
+			lst.str = ft_strdup(buff);
+		else
+		{
+			tmp = ft_join(lst.str, buff);
+			free(lst.str);
+			lst.str = tmp;
+		}
+		if ((lst.r = ch_n(lst.str)) > 0)
 			break ;
 	}
-	if (ret == 0)
-		lst.end = -1;
+	lst.end = ret;
 	return (lst);
 }
 
@@ -109,9 +138,9 @@ int	get_next_line(int fd, char **line)
 {
 	static t_list	lst;
 
-	if (fd < 0 || line == NULL || !fd)
+	if (fd < 0 || line == NULL || BUFFER_SIZE < 1)
 		return (-1);
-	if (!(lst.str))
+	if (!(lst.str) || lst.str == NULL)
 	{
 		if (!(lst.str = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
 			return (-1);
@@ -123,7 +152,7 @@ int	get_next_line(int fd, char **line)
 	lst.str = str_edit(lst.str);
 	if (lst.r > 0)
 		lst.r--;
-	if (lst.end == -1)
+	if (lst.end == 0)
 		return (0);
 	return (1);
 }
