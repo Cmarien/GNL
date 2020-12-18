@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cmarien <cmarien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 15:43:07 by cmarien           #+#    #+#             */
-/*   Updated: 2020/12/15 17:26:02 by cmarien          ###   ########.fr       */
+/*   Updated: 2020/12/15 17:28:42 by cmarien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_join(char *s1, char *s2)
 {
@@ -111,27 +111,27 @@ char	*s_dup(char *str)
 
 int		get_next_line(int fd, char **line)
 {
-	static t_list	lst;
+	static t_list	lst[4096];
 
 	if (fd < 0 || line == NULL || BUFFER_SIZE < 1)
 		return (-1);
-	if (!(lst.str) || lst.str == NULL)
+	if (!(lst[fd].str) || lst[fd].str == NULL)
 	{
-		lst.str = NULL;
-		lst.r = 0;
+		lst[fd].str = NULL;
+		lst[fd].r = 0;
 	}
-	if (lst.r == 0)
-		lst = read_line(fd, &lst);
-	if (lst.end < 0)
+	if (lst[fd].r == 0)
+		lst[fd] = read_line(fd, &lst[fd]);
+	if (lst[fd].end < 0)
 		return (-1);
-	if (lst.str == NULL)
+	if (lst[fd].str == NULL)
 		*line = s_dup("");
 	else
-		*line = s_dup(lst.str);
-	lst.str = str_edit(lst.str, lst.end);
-	if (lst.r > 0)
-		lst.r--;
-	if (lst.end == 0)
+		*line = s_dup(lst[fd].str);
+	lst[fd].str = str_edit(lst[fd].str, lst[fd].end);
+	if (lst[fd].r > 0)
+		lst[fd].r--;
+	if (lst[fd].end == 0)
 		return (0);
 	return (1);
 }

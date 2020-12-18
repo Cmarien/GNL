@@ -6,7 +6,7 @@
 /*   By: cmarien <cmarien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/10 16:31:22 by cmarien           #+#    #+#             */
-/*   Updated: 2020/12/11 16:57:25 by cmarien          ###   ########.fr       */
+/*   Updated: 2020/12/15 17:20:23 by cmarien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,5 @@ typedef struct	s_list
 
 int				get_next_line(int fd, char **line);
 int				ch_n(char *str);
-char			*str_edit(char *str);
+char			*str_edit(char *str, int end);
 #endif
